@@ -1,5 +1,6 @@
 package com.SA.TestPackage;
 
+import org.junit.AfterClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -56,13 +57,15 @@ public class TestAssignment {
 		scrollIntoView(radioButton);
 		radioButton.click();
 		
-		Thread.sleep(2000);
-		WebElement ourLocation = driver.findElement(By.xpath("//*[text()='Our Locations']"));
-		scrollIntoView(ourLocation);
+	//	WebElement ourLocation = driver.findElement(By.xpath("//*[text()='Our Locations']"));
+	//	scrollIntoView(ourLocation);
 		
-		WebElement submit = driver.findElement(By.xpath("(//button[@name='form_page_submit'])[1]"));
-		scrollIntoView(submit);
-		submit.click();
+		JavascriptExecutor executor = (JavascriptExecutor) driver;
+	    executor.executeScript("arguments[0].click();", driver.findElement(By.xpath("(//button[@name='form_page_submit'])[1]")));
+		
+	//	WebElement submit = driver.findElement(By.xpath("(//button[@name='form_page_submit'])[1]"));
+	//	scrollIntoView(submit);
+	//	submit.click();
 		
 		String actualErrorMessage = driver.findElement(By.xpath("//*[text()='Sorry, there was an error submitting the form. Please try again.']")).getText();
 		String expectedErrorMessage = "Sorry, there was an error submitting the form. Please try again.";
@@ -73,16 +76,16 @@ public class TestAssignment {
 		String actualErrorMessage1 = driver.findElement(By.xpath("//*[text()='This field is required']")).getText();
 		String expectedErrorMessage1 = "This field is required']";
 		
-		Assert.assertEquals(actualErrorMessage1, expectedErrorMessage1);
-		
-		
-		
+		Assert.assertEquals(actualErrorMessage1, expectedErrorMessage1);	
 	}
 	
-	private void scrollIntoView(WebElement element) {
-		JavascriptExecutor js = (JavascriptExecutor) driver ; 
-		js.executeScript("arguments[0].scrollIntoView();", element);
-
+	public void scrollIntoView(WebElement element) {
+		JavascriptExecutor js = (JavascriptExecutor)driver ; 
+		js.executeScript("arguments[0].scrollIntoView(true);", element);
 	}
-   
+	
+	@AfterClass
+	public void closeBrowser() {
+		driver.quit();
+	}
 }
